@@ -1,0 +1,143 @@
+@font-face {
+    font-family: myfont;
+    src: url(font/Montserrat-Black.ttf);
+  }
+  @font-face {
+    font-family: fExtraBold;
+    src: url(font/Montserrat-ExtraBold.ttf);
+  }
+  @font-face {
+    font-family: fBold;
+    src: url(font/Montserrat-Bold.ttf);
+  }
+  @font-face {
+    font-family: fSemiBold;
+    src: url(font/Montserrat-SemiBold.ttf);
+  }
+  @font-face {
+    font-family: fregular;
+    src: url(font/Montserrat-Regular.ttf);
+  }
+.vendor {
+    text-align: center;
+    margin: 20px;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  .category-explorer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: calc(100vh - 60px);
+  }
+  
+  .category {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .category-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    justify-content: space-between;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    background-color: #3498db;
+  }
+  
+  .category-name b{
+    font-family: fSemiBold;
+    flex-grow: 1;
+    margin-left: 20%;
+  }
+  .category-name{
+    display: flex;
+    align-items: center;
+  }
+  
+  .category-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+  }
+  .product-actions{
+    display: flex;
+    gap: 8px;
+  }
+  .category-actions button{
+    background-color: #3498db;
+    border: none;
+    border-radius: 50%;
+  }
+  
+  .category-contents {
+    padding-left: 20px;
+  }
+  
+  .product {
+    margin: 10px 20px;
+    padding: 10px;
+    background-color: #f1c40f;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .product-name {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-family: fSemiBold;
+  }
+  .product-name b{
+    margin-left: 20%;
+    cursor: default;
+  }
+  .product button{
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+  }
+  .info{
+    justify-content: start;
+  }
+ 
+  .catInput{
+    height: 100%;
+    width: 7%;
+    padding: 5px;
+    border-radius: 50%;
+    color: grey;
+    cursor: pointer;
+    border: none;
+    transition: width .3s, border-radius .3s;
+  }
+  .catInput2{
+    height: 100%;
+    width: 50%;
+    padding: 5px;
+    border-radius: 10px;
+    color: grey;
+    border: none;
+    transition: width .3s, border-radius .3s;
+  }
+  .catInput3{
+    height: 100%;
+    width: 8%;
+    padding: 5px;
+    border-radius: 50%;
+    color: grey;
+    cursor: pointer;
+    border: none;
+    transition: width .3s, border-radius .3s;
+  }
+  button{
+    cursor: pointer;
+  }

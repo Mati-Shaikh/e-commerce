@@ -1,0 +1,9 @@
+.HeadingComponent{
+    text-align: center;
+    font-size: 24px;
+    margin: 30px 0;
+}
+.HeadingComponent b{
+    font-family: fExtraBold;
+    color: #0071bc;
+}

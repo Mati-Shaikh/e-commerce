@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import { X, Search,MapPin } from 'lucide-react';
+import { X, Search, MapPin } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -15,11 +15,35 @@ L.Icon.Default.mergeOptions({
 const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => {
   const [marker, setMarker] = useState(currentLocation || [51.505, -0.09]);
   const [search, setSearch] = useState('');
+  const [locationDetails, setLocationDetails] = useState({
+    city: '',
+    country: '',
+    lat: '',
+    lon: '',
+  });
 
   const MapClickHandler = () => {
     useMapEvents({
-      click: (e) => {
-        setMarker([e.latlng.lat, e.latlng.lng]);
+      click: async (e) => {
+        const { lat, lng } = e.latlng;
+        setMarker([lat, lng]);
+        // Reverse geocode the clicked location
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+          );
+          const result = await response.json();
+          if (result) {
+            setLocationDetails({
+              city: result.address.city || result.address.town || result.address.village || '',
+              country: result.address.country || '',
+              lat: lat.toFixed(6),
+              lon: lng.toFixed(6),
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching location details:', error);
+        }
       },
     });
     return null;
@@ -32,8 +56,19 @@ const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => 
       );
       const results = await response.json();
       if (results && results.length > 0) {
-        const { lat, lon } = results[0];
+        const { lat, lon, display_name } = results[0];
+        const reverseResponse = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+        );
+        const reverseResult = await reverseResponse.json();
+        
         setMarker([parseFloat(lat), parseFloat(lon)]);
+        setLocationDetails({
+          city: reverseResult.address.city || reverseResult.address.town || reverseResult.address.village || '',
+          country: reverseResult.address.country || '',
+          lat: parseFloat(lat).toFixed(6),
+          lon: parseFloat(lon).toFixed(6),
+        });
       }
     } catch (error) {
       console.error('Error fetching location:', error);
@@ -41,7 +76,11 @@ const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => 
   };
 
   const handleConfirm = () => {
-    onLocationSelect(marker);
+    onLocationSelect({
+      coordinates: marker,
+      city: locationDetails.city,
+      country: locationDetails.country
+    });
     onClose();
   };
 
@@ -50,11 +89,11 @@ const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => 
   // Custom marker icon
   const customIcon = new L.Icon({
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    iconSize: [25, 41], // size of the icon
-    iconAnchor: [12, 41], // point of the icon which will correspond to marker's position
-    popupAnchor: [1, -34], // point from which the popup should open
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-    shadowSize: [41, 41], // size of the shadow
+    shadowSize: [41, 41],
   });
 
   return (
@@ -81,6 +120,19 @@ const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => 
             <Search className="h-5 w-5" />
           </button>
         </div>
+
+        {/* Display location details form */}
+        <div className="p-4 space-y-2">
+          {locationDetails.city && (
+            <p><strong>City: </strong>{locationDetails.city}</p>
+          )}
+          {locationDetails.country && (
+            <p><strong>Country: </strong>{locationDetails.country}</p>
+          )}
+          <p><strong>Latitude: </strong>{locationDetails.lat}</p>
+          <p><strong>Longitude: </strong>{locationDetails.lon}</p>
+        </div>
+
         <div className="h-96">
           <MapContainer center={marker} zoom={13} className="h-full w-full">
             <TileLayer
@@ -109,7 +161,6 @@ const MapSelector = ({ isOpen, onClose, onLocationSelect, currentLocation }) => 
     </div>
   );
 };
-
 const SignupPage = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -119,7 +170,6 @@ const SignupPage = () => {
     businessTitle: '',
     description: '',
     businessType: '',
-    subBusinessType: '',
     address: {
       street: '',
       city: '',
@@ -127,29 +177,56 @@ const SignupPage = () => {
       coordinates: null
     }
   });
-
+  
   const [showMap, setShowMap] = useState(false);
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const businessTypes = ['Manufacturer', 'Retailer', 'Rental'];
-  const subBusinessTypes = {
-    Manufacturer: ['Combination 1', 'Combination 2'],
-    Retailer: ['Combination 3', 'Combination 4'],
-    Rental: ['Combination 5', 'Combination 6']
-  };
 
-  const handleLocationSelect = (coordinates) => {
+  const handleLocationSelect = (locationData) => {
     setFormData(prev => ({
       ...prev,
       address: {
         ...prev.address,
-        coordinates
+        coordinates: locationData.coordinates,
+        city: locationData.city,
+        country: locationData.country
       }
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    if (!formData.name || !formData.email || !formData.phone || !formData.shopName || !formData.businessTitle || !formData.description || !formData.businessType) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/business/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage('Business registered successfully. Awaiting admin approval.');
+      } else {
+        alert('Error during registration: ' + result.message);
+      }
+    } catch (error) {
+      alert('An error occurred during registration. Please try again.');
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -168,6 +245,7 @@ const SignupPage = () => {
             {step === 1 ? (
               <>
                 <div className="space-y-4">
+                  {/* Name, Email, Phone, Shop Name, Business Title, Description Fields */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
                     <input
@@ -233,13 +311,7 @@ const SignupPage = () => {
                       required
                       className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-sky-500 focus:border-sky-500"
                       value={formData.businessType}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          businessType: e.target.value,
-                          subBusinessType: ''
-                        })
-                      }
+                      onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
                     >
                       <option value="">Select Type</option>
                       {businessTypes.map((type) => (
@@ -249,26 +321,6 @@ const SignupPage = () => {
                       ))}
                     </select>
                   </div>
-                  {formData.businessType && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Sub Business Type</label>
-                      <select
-                        required
-                        className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-sky-500 focus:border-sky-500"
-                        value={formData.subBusinessType}
-                        onChange={(e) =>
-                          setFormData({ ...formData, subBusinessType: e.target.value })
-                        }
-                      >
-                        <option value="">Select Sub Type</option>
-                        {subBusinessTypes[formData.businessType].map((subType) => (
-                          <option key={subType} value={subType}>
-                            {subType}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex justify-end">
@@ -283,50 +335,8 @@ const SignupPage = () => {
               </>
             ) : (
               <>
+                {/* Location Section */}
                 <div className="space-y-4">
-                  {/* <div>
-                    <label className="block text-sm font-medium text-gray-700">Street Address</label>
-                    <input
-                      type="text"
-                      required
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-sky-500 focus:border-sky-500"
-                      value={formData.address.street}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        address: {...formData.address, street: e.target.value}
-                      })}
-                    />
-                  </div> */}
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">City</label>
-                      <input
-                        type="text"
-                        required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-sky-500 focus:border-sky-500"
-                        value={formData.address.city}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          address: {...formData.address, city: e.target.value}
-                        })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Country</label>
-                      <input
-                        type="text"
-                        required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-sky-500 focus:border-sky-500"
-                        value={formData.address.country}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          address: {...formData.address, country: e.target.value}
-                        })}
-                      />
-                    </div>
-                  </div>
-
                   <button
                     type="button"
                     onClick={() => setShowMap(true)}
@@ -337,8 +347,10 @@ const SignupPage = () => {
                   </button>
 
                   {formData.address.coordinates && (
-                    <div className="text-sm text-gray-500">
-                      Selected coordinates: {formData.address.coordinates[0].toFixed(6)}, {formData.address.coordinates[1].toFixed(6)}
+                    <div className="text-sm text-gray-500 space-y-2">
+                      <p><strong>City: </strong>{formData.address.city}</p>
+                      <p><strong>Country: </strong>{formData.address.country}</p>
+                      <p><strong>Coordinates: </strong>{formData.address.coordinates[0].toFixed(6)}, {formData.address.coordinates[1].toFixed(6)}</p>
                     </div>
                   )}
                 </div>
@@ -350,17 +362,25 @@ const SignupPage = () => {
                     className="text-gray-600 hover:text-gray-800"
                   >
                     Back
+                  
                   </button>
                   <button
                     type="submit"
                     className="bg-sky-500 text-white px-6 py-2 rounded-md hover:bg-sky-600"
+                    disabled={loading}
                   >
-                    Complete Registration
+                    {loading ? 'Registering...' : 'Complete Registration'}
                   </button>
                 </div>
               </>
             )}
           </form>
+
+          {successMessage && (
+            <div className="mt-4 text-green-500 font-semibold text-center">
+              {successMessage}
+            </div>
+          )}
         </div>
       </div>
 

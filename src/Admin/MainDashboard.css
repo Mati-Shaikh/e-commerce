@@ -1,0 +1,1423 @@
+@font-face {
+  font-family: myfont;
+  src: url(font/Montserrat-Black.ttf);
+}
+@font-face {
+  font-family: fExtraBold;
+  src: url(font/Montserrat-ExtraBold.ttf);
+}
+@font-face {
+  font-family: fBold;
+  src: url(font/Montserrat-Bold.ttf);
+}
+@font-face {
+  font-family: fSemiBold;
+  src: url(font/Montserrat-SemiBold.ttf);
+}
+@font-face {
+  font-family: fregular;
+  src: url(font/Montserrat-Regular.ttf);
+}
+*{
+  font-family: fregular;
+}
+
+.dash-header1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* Ensure the dropdown menu is positioned correctly */
+  }
+  
+  .logo1 {
+    height: 40px;
+  }
+  .logo1:hover{
+    cursor: pointer;
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.4s ease-in;*/
+  }
+  
+  .dash-buttons1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .dash-buttons1 button{
+    
+    font-family: fregular;
+    font-size: 0.75rem;
+    line-height: 0.8rem;
+  }
+ 
+  
+  .dash-reg-btn1,
+  .dash-login-btn1,
+  .dash-logout-btn1,
+  .dash-logOut-btn1,
+  .dash-manage-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .dash-logOut-btn1,
+  .dash-manage-btn {
+    margin-top: 20px;
+  }
+  .dash-reg-btn1,.dash-login-btn1, .dash-logOut-btn1 {
+    background-color: #3498db;
+    color: white;
+    border: 2px solid #3498db;
+  }
+  .dash-manage-btn {
+    background-color: white;
+    color: #3498db;
+    border: 2px solid #3498db;
+    position: relative;
+    top: 15%;
+  }
+  .dash-manage-btn:hover {
+    background-color: #3498db;
+    color: white;
+    position: relative;
+  }
+  
+  
+  .dash-reg-btn1:hover, .dash-logOut-btn1:hover, .dash-login-btn1:hover {
+    background-color: #f0f0f0;
+    color: #3498db;
+  }
+  
+  .dash-login-btn1 {
+    background-color: #3498db;
+    color: white;
+    border: 2px solid #3498db;
+  }
+  
+  .dash-login-btn1:hover {
+    background-color: #f0f0f0;
+    color: #3498db;
+  }
+  
+  .dash-logout-btn1 {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .dash-logout-btn1:hover {
+    background-color: #c0392b;
+  }
+  
+  .user-name {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+  .dropButtons1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .dropdown1 .dropButtons1 button{
+    margin-top: 10%;
+  }
+  .profile-container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .name {
+    font-family: fsemibold;
+    font-size: 1.1rem;
+    margin: 20% 0;
+  }
+  .profile-pic1 {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* For a circular profile picture */
+    object-fit: cover; /* Ensure the image scales well */
+    border: 2px solid #ccc; /* Optional border */
+  }
+  .profile-pic2 {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* For a circular profile picture */
+    object-fit: cover; /* Ensure the image scales well */
+    border: 2px solid #ccc; /* Optional border */
+  }
+  .profile-container2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0 0px 0;
+  }
+  .profile-pic1:hover{
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+  .banner{
+    position: fixed;
+    display: grid;
+    z-index: 1;
+  }
+  .banner2{
+    position: fixed;
+    display: grid;
+    z-index: 1;
+    right: 2.4%;
+  }
+  .banner img, .banner2 img, .banner3 img{
+    border: 2px solid #e74c3c;
+  }
+  .banner img, .banner2 img{
+    height: 200px;
+    margin-bottom: 20px;
+  }
+
+  .news-section1{
+    grid-column: 2;
+    position: relative;
+    z-index: 5;
+    overflow: hidden;
+    margin: 0 15%;
+  }
+  .grid-container {
+    display: flex;
+    gap: 16px;
+    padding: 30px;
+  }
+  .grid-container2 {
+    display: grid;
+    grid-template-columns: 0.5fr 30fr;
+  }
+  
+  .grid-item1 {
+    background-color: #a2a1a1;
+    padding: 2px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .news1 .grid-item1 {
+    padding: 0 3%;
+  }
+  .Vend {
+    background-color: #6b6969;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #100f0f;
+  }
+  .news1 {
+    background-color: #cccccc48;
+    position: relative;
+    overflow: hidden;
+    height: 490px;
+    border-radius: 25px;
+  }
+  .score1 {
+    background-color: #cccccc48;
+    height: 490px;
+    margin-top: 10%;
+    border-radius: 25px;
+  }
+  .grid-item1 p, .Vendorback p {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+  .post {
+    background-color: #cccccc48;
+    margin-top: 10%;
+    border-radius: 25px;
+  }
+  .arena{
+    background-color: #cccccc48;
+    margin-top: 10%;
+    border-radius: 25px;
+  }
+  
+  .info {
+    background-color: #f8f8f8;
+    margin-top: 10%;
+    border-radius: 25px;
+  }
+  
+  .react-calendar__navigation {
+    justify-content: center;
+  }
+  .react-calendar__navigation button {
+    min-width: 0;
+  }
+  
+  .calendar {
+    max-width: 200px;
+    /* Adjust the width as needed */
+    margin-right: 20px;
+    /* Space between calendar and news section */
+  }
+  
+  .Vendorback {
+    background-color: #f1eeee;
+    position: relative;
+    overflow: hidden;
+    margin-top: 10%;
+    border-radius: 25px;
+  }
+  .slider-container2 {
+    width: 750px; 
+    max-width: 100%;
+    margin: auto 0;
+    overflow: hidden;
+    height: 142px;
+  }
+  .slider-container4 {
+    width: 750px; 
+    max-width: 100%;
+    margin: auto 0;
+    overflow: hidden;
+    height: 142px;
+  }
+  .slider-container {
+    width: auto; 
+    max-width: 79%; 
+    margin: 0 auto; 
+    overflow: hidden; 
+    line-height: 0px;
+    height: 95%;
+  }
+  
+  
+  .slider-container3 {
+    width: 300px; 
+    max-width: 100%; 
+    margin: 0 auto; 
+    overflow: hidden; 
+    line-height: 0px;
+    height: 95%;
+  }
+  .news-item1{
+    width: 110% !important;
+    margin: 1% 0;
+    border: 2px solid #3498db;
+    background-color: #29abe2;
+    border-end-start-radius: 25px;
+    border-start-start-radius: 25px;
+    line-height: 0.45;
+    text-align: start;
+    overflow: hidden;
+    opacity: 0.5;
+  }
+  .centered-item{
+    width: 110% !important;
+    margin: 1% 0;
+    background-color: White;
+    border: 2px solid red;
+    line-height: 0.45;
+    border-end-start-radius: 25px;
+    border-start-start-radius: 25px;
+    opacity: 1;
+  }
+
+  
+  .score-item1{
+    margin: 0.2% 0;
+    text-align: center;
+  }
+
+  .news-item1 p{
+    
+    color: white;
+    margin-bottom: 15px;
+    font-family: fSemiBold;
+    font-size: 0.7rem;
+    width: auto;
+    background-color: transparent;
+    border-end-start-radius: 25px;
+    border-start-start-radius: 25px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    margin-left: 5%;
+  
+  }
+  .centered-item p{
+    
+    color: white;
+    margin-bottom: 15px;
+    font-family: fSemiBold;
+    font-size: 0.7rem;
+    width: auto;
+    background-color: transparent;
+    border-end-start-radius: 25px;
+    border-start-start-radius: 25px;
+    box-sizing: border-box;
+    animation: slide 12s linear;
+    overflow: initial;
+  }
+  .slider-container .centered-item p {
+    color: red;
+  }
+  @keyframes slide{
+    0%{
+      transform: translateX(100%);
+    }
+    100%{
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes oneItem{
+    0%{
+      transform: translateX(100%);
+    }
+    100%{
+      transform: translateX(-200%);
+    }
+  }
+  .one{
+    animation: oneItem 12s linear;
+  }
+  .post-item {
+    margin: 0.2% 0;
+    width: 800px;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+  .post-item button{
+    margin: 0;
+      font-family: fregular;
+      font-size: 0.8rem;
+      line-height: 0.80;
+  }
+  .news-content1{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 354px;
+  }
+  
+  
+  .score-item1 p{
+    padding: 1rem;
+    color: white;
+    border: 2px solid #3498db;
+    margin-bottom: 15px;
+    font-family: fSemiBold;
+    font-size: 0.7rem;
+    width: 300px;
+    background-color: #29abe2;
+    border-end-start-radius: 25px;
+    border-start-start-radius: 25px;
+    box-sizing: border-box;
+  }
+  
+  .video-ad {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensures the video fills the area without distortion */
+  }
+  
+  
+  
+  .main-container {
+    background-color: #f1eeee;
+    /* Set the background color to silver */
+    padding: 20px;
+    border-radius: 25px;
+    /* Optional: Adjust padding as needed */
+  }
+  
+  /* Number bar button styles */
+  .number-btn1 {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 50%;
+  }
+  
+  .number-btn1.active {
+    background-color: #29abe2;
+    color: white;
+  }
+  
+  /* Styles for your post container */
+  .post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    background-color: #f8f8f8;
+  }
+  
+  /* Styles for followed posts container */
+  .followed-post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    background-color: #f1eeee;
+  }
+  
+  /* Ensure posts are displayed in a single row */
+  .post-row,
+  .followed-post-row,
+  .arena-row,
+  .nearArena-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* Optional: Adds space between vendors */
+    padding: 10px;
+    overflow-x: auto;
+  }
+  
+  /* Styling for post items */
+  .post-item,
+  .followed-post-item {
+    flex: 0 0 auto;
+    margin-right: 10px;
+    text-align: center;
+  }
+  
+  .post-image,
+  .followed-post-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .vendor-container {
+    background-color: #f1eeee;
+    padding: 20px;
+    border-radius: 25px;
+  }
+  
+  .vendor-item {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .vendor-item-btn {
+    border: none;
+    border-radius: 25px;
+    background-color: #29aae2c9;
+    color: white;
+    padding: 1% 1% 0% 1%;
+    cursor: pointer;
+  }
+ 
+  .vendor-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 25px;
+  }
+  
+  .vendor-name {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+ 
+  .number-selection1 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px 2%;
+    gap: 0.5rem;
+  }
+  .number-selection1 button{
+    margin: 0;
+      font-size: 0.8rem;
+  }
+  
+  .number-btn1 {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-right: 5px;
+    /* Adds small space between buttons */
+  }
+  
+  .number-btn1.active {
+    background-color: #007bff;
+    color: white;
+  }
+  .news1 .Headings1 b{
+    font-family: fExtraBold;
+    color: #0071bc;
+    margin-right: 40px;
+  }
+  .Headings1 b{
+    font-family: fExtraBold;
+    color: #0071bc;
+  }
+  
+  .calendar-icon:hover{
+    color: #29abe2;
+  }
+  .number-selection-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* Ensures the container takes full width */
+  }
+  
+  .calendar-dropdown {
+    position: absolute;
+    top: 53px;
+    /* Adjust based on the position relative to the icon */
+    left: 2%;
+    /* Adjust as needed */
+    z-index: 11;
+    font-size: 0.8rem;
+  }
+  
+  .calendar {
+    width: 300px;
+    /* Adjust calendar size */
+    height: auto;
+    background-color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+  }
+  .calendar-icon-div{
+    position: relative;
+    top: 20%;
+  }
+  .calendar-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    margin-left: 0px;
+  }
+  
+  .dropdown-content1 {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 210px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 20;
+    display: block;
+    right: 0;
+    top: 100%;
+    align-items: center;
+  justify-content: center;
+  }
+  .dropdown-content2 {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 210px;
+    height: 240px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 6;
+    display: block;
+    right: 0;
+    top: 100%;
+    align-items: center;
+  justify-content: center;
+  text-align: center;
+  }
+  .dropdown-content1 a {
+    float: none;
+    color: black;
+    padding: 12px 0px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  
+  .dropdown-content1 a:hover {
+    background-color: #29abe2;
+    color: white;
+  }
+  .dropdown1{
+    height: 50%;
+    width: 60%;
+  }
+  .dropdown1 button{
+    margin: 0;
+      font-family: fregular;
+      font-size:0.8rem;
+      line-height: initial;
+      border: 1px solid;
+      border-radius: 2px;
+  }
+  .dropbtn1:hover{
+    cursor: pointer;
+  }
+  .banner3{
+    display: none;
+  }
+  .contentWrapper {
+    display: flex;
+    flex-grow: 1;
+    margin-bottom: 20%;
+  }
+  .main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
+  }
+  
+  .mainLogo {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .mainLogo img {
+    max-width: 100%;
+    height: auto;
+  }
+  .searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .searchContainer.mainSearch {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .mainSearchBar {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px 5px 5px 5px;
+  }
+  .searchBar, .mainSearchBar {
+    width: 300px;
+    padding: 5px 30px 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .darkTheme .searchBar,
+  .darkTheme .mainSearchBar {
+    background-color: #555;
+    color: #f0f0f0;
+    border-color: #777;
+  }
+  .searchIcon {
+    position: absolute;
+    right: 10px;
+    color: #6c757d;
+  }
+  .darkTheme .searchIcon {
+    color: #aaa;
+  }
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  .suggestions li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .suggestions li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .darkTheme .suggestions {
+    background-color: #444;
+    border-color: #777;
+  }
+  
+  .darkTheme .suggestions li:hover {
+    background-color: #555;
+  }
+  @media (max-width: 768px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+     
+    }
+  }
+  
+  
+  @media (max-width: 780px) {
+    /* Layout for mobile-first design */
+  
+    .dash-header1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: #f8f8f8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      /* Ensure the dropdown menu is positioned correctly */
+    }
+    
+    .logo1 {
+      height: 40px;
+    }
+    .logo1:hover{
+      cursor: pointer;
+      /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 0.4s ease-in;*/
+    }
+    
+    .dash-buttons1 {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .dash-reg-btn1,
+    .dash-login-btn1,
+    .dash-logout-btn1 {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .dash-reg-btn1 {
+      background-color: #29abe2;
+      color: white;
+      border: 2px solid #3498db;
+    }
+    
+    .dash-reg-btn1:hover {
+      background-color: #f0f0f0;
+      color: #3498db;
+    }
+    
+    .dash-login-btn1 {
+      background-color: #29abe2;
+      color: white;
+      border: 2px solid #3498db;
+    }
+    
+    .dash-login-btn1:hover {
+      background-color: #f0f0f0;
+      color: #3498db;
+    }
+    
+    .dash-logout-btn1 {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .dash-logout-btn1:hover {
+      background-color: #c0392b;
+    }
+    
+    
+    .news-section1{
+      grid-column: 2;
+      box-sizing: border-box;
+      margin: 0;
+    }
+    .grid-container {
+      display: flex;
+      gap: 0px;
+      padding: 20px 10px 20px 20px;
+    }
+    .grid-container2 {
+      display: grid;
+      grid-template-columns: 0.5fr 30fr;
+    }
+    
+    .grid-item1 {
+      background-color: #a2a1a1;
+      padding: 2px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+    .news1 .grid-item1 {
+      padding: 0 3%;
+    }
+    .Vend {
+      background-color: #6b6969;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid #100f0f;
+    }
+    .news1{
+      background-color: #cccccc48;
+      position: relative;
+      overflow: hidden;
+      height: 490px;
+      border-radius: 25px;
+    }
+    .score1 {
+      background-color: #cccccc48;
+      height: 490px;
+      margin-top: 10%;
+      border-radius: 25px;
+    }
+
+    .post {
+      background-color: #cccccc48;
+      margin-top: 10%;
+      border-radius: 25px;
+    }
+    .arena{
+      background-color: #cccccc48;
+      margin-top: 10%;
+      border-radius: 25px;
+    }
+    
+    .info {
+      background-color: #f8f8f8;
+      margin-top: 10%;
+      border-radius: 25px;
+    }
+    
+    .react-calendar__navigation {
+      justify-content: center;
+    }
+    .react-calendar__navigation button {
+      min-width: 0;
+    }
+    
+    .calendar {
+      max-width: 200px;
+      /* Adjust the width as needed */
+      margin-right: 20px;
+      /* Space between calendar and news section */
+    }
+    
+    .Vendorback {
+      background-color: #f1eeee;
+      position: relative;
+      overflow: hidden;
+      margin-top: 10%;
+      border-radius: 25px;
+    }
+    .slider-container {
+      width: auto; 
+      max-width: 75%; 
+      margin: 0 auto; 
+      overflow: hidden; 
+      line-height: 0px;
+      height: 95%;
+    }
+    .post-item button{
+      margin: 0;
+        font-family: fregular;
+        font-size: 0.8rem;
+        line-height: 1.1;
+    }
+    
+    .news-item1{
+      margin: 0.2% 0;
+    }
+    .score-item1{
+      margin: 0.2% 0;
+    }
+    .centered-item{
+      margin: 1% 0;
+      background-color: White;
+      border: 2px solid red;
+      line-height: 0.45;
+      border-end-start-radius: 25px;
+      border-start-start-radius: 25px;
+    }
+    .news-item1 p{
+      padding: 1rem;
+      color: white;
+      border: none;
+      margin-bottom: 15px;
+      font-family: fSemiBold;
+      font-size: 0.7rem;
+      width: auto;
+      background-color: #29abe2;
+      border-end-start-radius: 25px;
+      border-start-start-radius: 25px;
+      box-sizing: border-box;
+    }
+    @keyframes slide{
+      0%{
+        transform: translateX(100%);
+      }
+      100%{
+        transform: translateX(-250%);
+      }
+    }
+    .news-content1 .slider-container3 .slick-slide{
+      width: 272px !important;
+    }
+    
+    .post-row .slider-container2 .slick-slide{
+      width: 100px !important;
+    }
+    
+    .centered-item p{
+    
+      color: white;
+      margin-bottom: 15px;
+      font-family: fSemiBold;
+      font-size: 0.7rem;
+      width: auto;
+      border: none;
+      background-color: transparent;
+      border-end-start-radius: 25px;
+      border-start-start-radius: 25px;
+      box-sizing: border-box;
+      animation: slide 8s linear;
+      white-space: nowrap;
+    }
+    .slider-container .centered-item p {
+      color: red;
+    }
+    .post-item {
+      margin: 0.2% 0;
+      width: 200px;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+    .news-content1{
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      height: 354px;
+    }
+    
+    
+    .score-item1 p{
+      padding: 1rem;
+      color: white;
+      border: 2px solid #3498db;
+      margin-bottom: 15px;
+      font-family: fSemiBold;
+      font-size: 0.7rem;
+      width: 300px;
+      background-color: #29abe2;
+      border-end-start-radius: 25px;
+      border-start-start-radius: 25px;
+      box-sizing: border-box;
+    }
+    
+    .video-ad {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Ensures the video fills the area without distortion */
+    }
+    
+    
+    
+    .main-container {
+      background-color: #f1eeee;
+      /* Set the background color to silver */
+      padding: 20px;
+      border-radius: 25px;
+      /* Optional: Adjust padding as needed */
+    }
+    
+    /* Number bar button styles */
+    .number-btn1 {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: 50%;
+    }
+    
+    .number-btn1.active {
+      background-color: #29abe2;
+      color: white;
+    }
+    
+    /* Styles for your post container */
+    .post-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 10px;
+      background-color: #f8f8f8;
+    }
+    
+    /* Styles for followed posts container */
+    .followed-post-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 10px;
+      background-color: #f1eeee;
+    }
+    
+    /* Ensure posts are displayed in a single row */
+    .post-row,
+    .followed-post-row,
+    .arena-row,
+    .nearArena-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0px;
+      /* Optional: Adds space between vendors */
+      padding: 0px;
+      overflow-x: auto;
+    }
+    
+    /* Styling for post items */
+    .post-item,
+    .followed-post-item {
+      flex: 0 0 auto;
+      margin-right: 10px;
+      text-align: center;
+    }
+    
+    .post-image,
+    .followed-post-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .vendor-container {
+      background-color: #f1eeee;
+      padding: 20px;
+      border-radius: 25px;
+    }
+    
+    .vendor-item {
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .vendor-item-btn {
+      border: none;
+      border-radius: 25px;
+      background-color: #29aae2c9;
+      color: white;
+      padding: 1% 1% 0% 1%;
+      cursor: pointer;
+    }
+    .slider-container2 {
+      width: 750px; 
+      max-width: 100%;
+      margin: auto 0;
+      overflow: hidden;
+      height: 116px;
+    }
+    .slider-container4 {
+      width: 750px; 
+      max-width: 100%;
+      margin: auto 0;
+      overflow: hidden;
+      height: 116px;
+    }
+    .vendor-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 25px;
+    }
+    
+    .vendor-name {
+      margin-top: 5px;
+      font-weight: bold;
+    }
+    
+    .number-selection1 {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 10px 2%;
+    }
+    
+    .number-btn1 {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      margin-right: 5px;
+      /* Adds small space between buttons */
+    }
+    
+    .number-btn1.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .news1 .Headings1 b{
+      font-family: fExtraBold;
+      color: #0071bc;
+      margin-right: 40px;
+    }
+    .Headings1 b{
+      font-family: fExtraBold;
+      color: #0071bc;
+    }
+    
+    .calendar-icon:hover{
+      color: #29abe2;
+    }
+    .number-selection-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      /* Ensures the container takes full width */
+    }
+    
+    .calendar-dropdown {
+      position: absolute;
+      top: 53px;
+      /* Adjust based on the position relative to the icon */
+      left: 2%;
+      /* Adjust as needed */
+      z-index: 11;
+      font-size: 0.8rem;
+    }
+    
+    .calendar {
+      width: 300px;
+      /* Adjust calendar size */
+      height: auto;
+      background-color: white;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      
+    }
+    .calendar-icon-div{
+      position: relative;
+      top: 20%;
+    }
+    .calendar-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: fit-content;
+      padding: 8px 12px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 25px;
+      margin-left: 0px;
+    }
+    
+    .dropdown-content1 {
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 210px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 20;
+      display: block;
+      right: 0;
+      top: 100%;
+      align-items: center;
+    justify-content: center;
+    }
+    
+    .dropdown-content1 a {
+      float: none;
+      color: black;
+      padding: 12px 0px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+    
+    .dropdown-content1 a:hover {
+      background-color: #29abe2;
+      color: white;
+    }
+    .dropdown1{
+      height: 50%;
+      width: 60%;
+    }
+    .dropbtn1:hover{
+      cursor: pointer;
+    }
+
+    /* Adjust the dash header */
+    .dash-header1 {
+      display: flex;  
+      padding: 10px 5px;
+      background-color: #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+  
+    /* Adjust logo size for small screens */
+    .logo1 {
+      height: 25px;
+      position: relative;
+      left: 0;
+    }
+    .dash-reg-btn1:hover {
+      background-color: #29abe2;
+      color: white;
+    }
+    
+    .dash-login-btn1:hover {
+      background-color: #29abe2;
+      color: white;
+    }
+    /* Button size adjustment for small screens */
+    .dash-reg-btn1,
+    .dash-login-btn1,
+    .dash-logout-btn1 {
+      font-size: 12px;
+      /* Smaller font size */
+      padding: 5px;
+      /* Smaller padding */
+    }
+    /* Make sure each grid item takes full width */
+    .grid-item1 {
+      width: 100%;
+    }
+  
+
+    .banner, .banner2{
+      display: none;
+    }
+    .banner3{
+      position: fixed;
+      display: block;
+      bottom: -92%;
+      max-width: 20%;
+      height: -webkit-fill-available;
+      transform: rotate(90deg);
+      z-index: 200;
+    }
+    
+  
+    /* Bottom banner section */
+    .banner-bottom {
+      width: 100%;
+      height: auto;
+      /* Ensures the banner is responsive */
+      margin-top: 20px;
+      /* Adds margin at the bottom */
+    }
+  
+    /* Vendor container responsiveness */
+    .vendor-container {
+      flex-direction: column;
+      gap: 10px;
+      overflow-x: visible;
+      /* Removes horizontal scrolling */
+    }
+  
+    /* Ensure vendor images are displayed in full width */
+    .vendor-image {
+      width: 100%;
+      height: auto;
+    }
+  
+    /* Responsive post layout */
+    .post-container,
+    .followed-post-container {
+      gap: 10px;
+      padding: 5px;
+    }
+  
+    .post-row,
+    .followed-post-row {
+      display: flex;
+      flex-direction: column;
+      /* Stack items vertically */
+    }
+  
+    .post-item,
+    .followed-post-item {
+      width: 100%;
+    }
+  
+    /* Calendar dropdown and calendar adjustments for smaller screens */
+    .calendar-dropdown {
+      top: 80px;
+      /* Adjust dropdown position */
+      left: 10px;
+      /* Align properly in mobile view */
+    }
+  
+    .calendar {
+      width: 100%;
+      /* Full width for calendar */
+    }
+  
+    /* Adjust news and score items for mobile */
+    .news-item1,
+    .score-item1 {
+      width: 100%;
+      font-size: 12px;
+      margin-bottom: 10px;
+
+    }
+    
+    /* Number button adjustment */
+    .number-btn1 {
+      padding: 5px 8px;
+      margin-right: 2px;
+    }
+    .contentWrapper {
+      flex-direction: column;
+    }
+    .searchBar, .mainSearchBar {
+      width: 100%;
+    }
+    .main {
+      margin-left: 0;
+    }
+    .searchContainer.headerSearch {
+      margin-bottom: 10px;
+    }
+    /* Remove unnecessary horizontal overflow */
+    body {
+      overflow-x: hidden;
+    }
+  }
+     
+      

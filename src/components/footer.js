@@ -34,7 +34,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h2 className="text-2xl font-bold text-sky-600 mb-4">EStore</h2>
+            <h2 className="text-2xl font-bold text-sky-600 mb-4">SportHub</h2>
             <p className="text-gray-600 mb-4">
               Your one-stop shop for all your needs. Quality products at the best prices.
             </p>
@@ -89,16 +89,16 @@ const Footer = () => {
                   <br />
                   Business District,
                   <br />
-                  City, Country
+                  City, Pakistan
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone className="text-sky-500 mr-2" size={20} />
-                <span className="text-gray-600">+1 234 567 8900</span>
+                <span className="text-gray-600">+51 4352 7637</span>
               </li>
               <li className="flex items-center">
                 <Mail className="text-sky-500 mr-2" size={20} />
-                <span className="text-gray-600">support@estore.com</span>
+                <span className="text-gray-600">support@sportshub.com</span>
               </li>
             </ul>
           </div>
@@ -110,14 +110,9 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 text-sm mb-4 md:mb-0">
-              © {currentYear} EStore. All rights reserved.
+              © {currentYear} sportshub. All rights reserved.
             </p>
-            <div className="flex items-center space-x-4">
-              <img src="/api/placeholder/50/30" alt="Payment Method" className="h-8" />
-              <img src="/api/placeholder/50/30" alt="Payment Method" className="h-8" />
-              <img src="/api/placeholder/50/30" alt="Payment Method" className="h-8" />
-              <img src="/api/placeholder/50/30" alt="Payment Method" className="h-8" />
-            </div>
+            
           </div>
         </div>
       </div>
