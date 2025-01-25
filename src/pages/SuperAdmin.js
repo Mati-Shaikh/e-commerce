@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Package, List, PlusCircle, LogOut, Menu } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Sidebar Component
-const Sidebar = ({ isOpen, setIsOpen }) => {
+const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
   const menuItems = [
-    { icon: <Home size={20} />, label: 'Dashboard', id: 'dashboard' },
-    { icon: <Package size={20} />, label: 'Products', id: 'products' },
-    { icon: <List size={20} />, label: 'Categories', id: 'categories' },
-    { icon: <List size={20} />, label: 'Admins', id: 'admin' },
-    { icon: <List size={20} />, label: 'Users', id: 'users' },
+    { icon: <Home size={20} />, label: 'Dashboard', id: 'dashboard', route: '/SuperAdmin' },
+    { icon: <Package size={20} />, label: 'Products', id: 'products', route: '/' },
+    { icon: <List size={20} />, label: 'Admins', id: 'admin', route: '/adminUsers' },
+    { icon: <List size={20} />, label: 'User', id: 'user', route: '/users' },
   ];
 
   return (
@@ -21,14 +22,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </div>
       <nav className="mt-4">
         {menuItems.map((item) => (
-          <a
+          <Link
             key={item.id}
-            href={`#${item.id}`}
+            to={item.route} // Use the Link component to navigate
             className="flex items-center px-4 py-3 hover:bg-blue-700 transition-colors"
           >
             {item.icon}
             <span className={`ml-4 ${isOpen ? 'block' : 'hidden'}`}>{item.label}</span>
-          </a>
+          </Link>
         ))}
         <button className="flex items-center w-full px-4 py-3 hover:bg-blue-700 mt-auto">
           <LogOut size={20} />

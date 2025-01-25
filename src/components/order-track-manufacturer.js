@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, Download, Printer } from 'lucide-react';
 import Navbar from './manufacturerNavbar';
+import Footer from './footer';
 
 const OrderTrackingTable = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -124,6 +125,7 @@ const OrderTrackingTable = () => {
           </tbody>
         </table>
       </div>
+    <Footer/>
     </div>
   );
 };

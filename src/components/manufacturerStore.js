@@ -3,6 +3,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } 
 import { Package, DollarSign, Users, TrendingUp, Search, ShoppingCart, Heart, Star, ChevronDown } from 'lucide-react';
 import Footer from './footer';
 import Navbar from './manufacturerNavbar';
+import ProductsGrid from './productsGrid.js';
+
+
 const ManufacturerStoreDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -107,7 +110,7 @@ const ManufacturerStoreDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <Navbar cartItems={cartItems} />
+      <Navbar />
       {/* Dashboard Stats */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -174,7 +177,7 @@ const ManufacturerStoreDashboard = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map(product => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative">
@@ -221,7 +224,7 @@ const ManufacturerStoreDashboard = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Product Modal */}
@@ -283,6 +286,7 @@ const ManufacturerStoreDashboard = () => {
           </div>
         </div>
       )}
+      <ProductsGrid/>
       <Footer/>
     </div>
   );

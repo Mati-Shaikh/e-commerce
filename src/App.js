@@ -9,6 +9,8 @@ import Vendor from './Admin/Vendor';
 import SuperAdmin from './pages/SuperAdmin';
 import OrderTrackingTable from './components/order-tracking';
 import AddProduct from './components/add-product';
+import Users from './pages/Users';
+import AdminUsers from './pages/Adminusers';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="/Admin" element={<Vendor/>} />
 
           <Route path="/SuperAdmin" element={<SuperAdmin/>} />
+          <Route path="/users" element={<Users/>} />
+          <Route path="/Adminusers" element={<AdminUsers/>} />
 
         </Routes>
       </div>

@@ -182,7 +182,7 @@ const SignupPage = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const businessTypes = ['Manufacturer', 'Retailer', 'Rental'];
+  const businessTypes = ['Manufacturer', 'Retailer', 'Rental','Rental and Retailer','Manufacturer And Retailer'];
 
   const handleLocationSelect = (locationData) => {
     setFormData(prev => ({
