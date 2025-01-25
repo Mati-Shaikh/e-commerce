@@ -7,6 +7,8 @@ import ManufacturerStoreDashboard from './components/manufacturerStore';
 import RetailerStore from './components/retailerStore';
 import Vendor from './Admin/Vendor'; 
 import SuperAdmin from './pages/SuperAdmin';
+import OrderTrackingTable from './components/order-tracking';
+import AddProduct from './components/add-product';
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/manufacturerStore" element={<ManufacturerStoreDashboard/>} />
           <Route path="/retailerStore" element={<RetailerStore/>} />
+          <Route path="/order-tracking" element={<OrderTrackingTable/>} />
+          <Route path="/add-product" element={<AddProduct/>} />
+
           <Route path="/Admin" element={<Vendor/>} />
 
           <Route path="/SuperAdmin" element={<SuperAdmin/>} />

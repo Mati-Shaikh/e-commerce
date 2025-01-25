@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
 import { Package, DollarSign, Users, TrendingUp, Search, ShoppingCart, Heart, Star, ChevronDown } from 'lucide-react';
 import Footer from './footer';
+import Navbar from './retailerNavbar';
+
 const ManufacturerStoreDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const salesData = [
     { month: 'Jan', sales: 4000 },
@@ -106,19 +109,7 @@ const ManufacturerStoreDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <nav className="bg-white shadow-md px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-blue-600">Retailer Store</div>
-          <div className="flex items-center space-x-4">
-            <button className="relative">
-              <ShoppingCart className="w-6 h-6" />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                {cartItems.length}
-              </span>
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar cartItems={cartItems} />
 
       {/* Dashboard Stats */}
       <div className="max-w-7xl mx-auto px-6 py-8">

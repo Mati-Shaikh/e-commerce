@@ -85,226 +85,186 @@ const ProductCard = ({ product, onDelete }) => {
       </div>
     );
   };
-  
-  
+ 
 
-// Main Dashboard Component
-const AdminDashboard = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [activeTab, setActiveTab] = useState('products');
-  const [productForm, setProductForm] = useState({
-    name: '',
-    price: '',
-    description: '',
-    size: '',
-    category_id: ''
-  });
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Fetch categories
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/categories');
-      const data = await response.json();
-      console.log(data);
-      setCategories(data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
-  // Fetch products
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/products');
-      const data = await response.json();
-      setProducts(data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-    fetchProducts();
-  }, []);
-
-  // Handle product creation
-  const handleCreateProduct = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData();
-    Object.keys(productForm).forEach(key => {
-      formData.append(key, productForm[key]);
+  const AdminDashboard = () => {
+    const [isOpen, setIsOpen] = useState(true);
+    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [activeTab, setActiveTab] = useState('products');
+    const [productForm, setProductForm] = useState({
+      name: '',
+      price: '',
+      description: '',
+      size: '',
+      category_id: '',
     });
-    selectedFiles.forEach(file => {
-      formData.append('images', file);
-    });
-
-    try {
-      const response = await fetch('http://localhost:3000/api/products', {
-        method: 'POST',
-        body: formData,
+    const [categoryForm, setCategoryForm] = useState({ name: '', parentId: null });
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [loading, setLoading] = useState(false);
+  
+    // Fetch categories in tree structure
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/categories/tree');
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+  
+    // Fetch products
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchCategories();
+      fetchProducts();
+    }, []);
+  
+    // Handle product creation
+    const handleCreateProduct = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+  
+      const formData = new FormData();
+      Object.keys(productForm).forEach((key) => {
+        formData.append(key, productForm[key]);
       });
-      if (response.ok) {
-        setProductForm({
-          name: '',
-          price: '',
-          description: '',
-          size: '',
-          category_id: ''
+      selectedFiles.forEach((file) => {
+        formData.append('images', file);
+      });
+  
+      try {
+        const response = await fetch('http://localhost:3000/api/products', {
+          method: 'POST',
+          body: formData,
         });
-        setSelectedFiles([]);
-        fetchProducts();
+        if (response.ok) {
+          setProductForm({ name: '', price: '', description: '', size: '', category_id: '' });
+          setSelectedFiles([]);
+          fetchProducts();
+        }
+      } catch (error) {
+        console.error('Error creating product:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error creating product:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Handle product deletion
-  const handleDeleteProduct = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        fetchProducts();
+    };
+  
+    // Handle category creation
+    const handleCreateCategory = async (e) => {
+      e.preventDefault();
+  
+      try {
+        const response = await fetch('http://localhost:3000/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(categoryForm),
+        });
+        if (response.ok) {
+          setCategoryForm({ name: '', parentId: null });
+          fetchCategories();
+        }
+      } catch (error) {
+        console.error('Error creating category:', error);
       }
-    } catch (error) {
-      console.error('Error deleting product:', error);
-    }
-  };
-  const handleFileChange = (e) => {
-    const filesArray = Array.from(e.target.files);
-    setSelectedFiles(filesArray);
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-      
-      <div className={`transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-20'}`}>
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold">Products Management</h1>
+    };
+  
+    // Recursive function to render categories and subcategories in dropdown
+    const renderCategoryOptions = (categories, prefix = '') => {
+      return categories.map((category) => (
+        <>
+          <option key={category.id} value={category.id}>
+            {prefix + category.name}
+          </option>
+          {category.subcategories.length > 0 &&
+            renderCategoryOptions(category.subcategories, prefix + '-- ')}
+        </>
+      ));
+    };
+  
+    // Recursive function to render category tree
+    const renderCategoryTree = (categories) => {
+      return categories.map((category) => (
+        <li key={category.id} className="ml-4">
+          <div className="flex items-center gap-2">
+            <span>{category.name}</span>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Add Product Form */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-6">Add New Product</h2>
-              <form onSubmit={handleCreateProduct} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Category</label>
-                  <select
-                    value={productForm.category_id}
-                    onChange={(e) => setProductForm({...productForm, category_id: e.target.value})}
-                    className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Category</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Product Name</label>
-                  <input
-                    type="text"
-                    value={productForm.name}
-                    onChange={(e) => setProductForm({...productForm, name: e.target.value})}
-                    className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price</label>
-                  <input
-                    type="number"
-                    value={productForm.price}
-                    onChange={(e) => setProductForm({...productForm, price: e.target.value})}
-                    className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Description</label>
-                  <textarea
-                    value={productForm.description}
-                    onChange={(e) => setProductForm({...productForm, description: e.target.value})}
-                    className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    rows="3"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Size</label>
-                  <input
-                    type="text"
-                    value={productForm.size}
-                    onChange={(e) => setProductForm({...productForm, size: e.target.value})}
-                    className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Images</label>
-                  <input
-  type="file"
-  multiple
-  onChange={handleFileChange}
-  className="w-full border rounded px-4 py-2"
-  accept="image/*"
-/>
-                  {selectedFiles.length > 0 && <ImagePreview files={selectedFiles} />}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 
-                           disabled:bg-blue-300 transition-colors flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    'Creating...'
-                  ) : (
-                    <>
-                      <PlusCircle size={20} />
-                      Create Product
-                    </>
-                  )}
-                </button>
-              </form>
+          {category.subcategories.length > 0 && (
+            <ul className="ml-6 mt-2 border-l-2 border-gray-300 pl-4">
+              {renderCategoryTree(category.subcategories)}
+            </ul>
+          )}
+        </li>
+      ));
+    };
+  
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+  
+        <div className={`transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-20'}`}>
+          <div className="p-8">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold">Admin Dashboard</h1>
             </div>
-
-            {/* Product Grid */}
-            <div className="space-y-6">
-              <h2 className="text-xl font-semibold">Product List</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onDelete={handleDeleteProduct}
-                  />
-                ))}
+  
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Add Category Form */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold mb-6">Add New Category</h2>
+                <form onSubmit={handleCreateCategory} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Category Name</label>
+                    <input
+                      type="text"
+                      value={categoryForm.name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                      className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+  
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Parent Category</label>
+                    <select
+                      value={categoryForm.parentId || ''}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, parentId: e.target.value || null })}
+                      className="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">No Parent</option>
+                      {renderCategoryOptions(categories)}
+                    </select>
+                  </div>
+  
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <PlusCircle size={20} /> Add Category
+                  </button>
+                </form>
+              </div>
+  
+              {/* Category Tree */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-semibold mb-6">Category Tree</h2>
+                <ul className="space-y-2">{renderCategoryTree(categories)}</ul>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default AdminDashboard;
+    );
+  };
+  
+  export default AdminDashboard;
