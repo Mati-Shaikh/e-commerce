@@ -16,7 +16,7 @@ const Navbar = () => {
         {/* Centered Navigation Links */}
         <div className="flex-1 flex justify-center space-x-6">
           <a href="/add-product" className="text-blue-600">Add Product</a>
-          <a href="/order-tracking" className="text-blue-600">Order Tracking</a>
+          <a href="/order-tracking-manufacturer" className="text-blue-600">Order Tracking</a>
         </div>
 
         {/* Hamburger Menu Button */}
@@ -42,7 +42,7 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="absolute top-16 right-0 bg-white shadow-lg rounded-md w-48 p-4 space-y-4 md:hidden">
           <a href="/add-product" className="block text-blue-600">Add Product</a>
-          <a href="/order-tracking" className="block text-blue-600">Order Tracking</a>
+          <a href="/order-tracking-manufacturer" className="block text-blue-600">Order Tracking</a>
         </div>
       )}
     </nav>

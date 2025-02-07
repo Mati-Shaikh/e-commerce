@@ -8,6 +8,7 @@ import RetailerStore from './components/retailerStore';
 import Vendor from './Admin/Vendor'; 
 import SuperAdmin from './pages/SuperAdmin';
 import OrderTrackingTable from './components/order-tracking';
+import OrderTrackingTable2 from './components/order-track-manufacturer';
 import AddProduct from './components/add-product';
 import Users from './pages/Users';
 import AdminUsers from './pages/Adminusers';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/manufacturerStore" element={<ManufacturerStoreDashboard/>} />
           <Route path="/retailerStore" element={<RetailerStore/>} />
           <Route path="/order-tracking" element={<OrderTrackingTable/>} />
+          <Route path="/order-tracking-manufacturer" element={<OrderTrackingTable2/>} />
           <Route path="/add-product" element={<AddProduct/>} />
 
           <Route path="/Admin" element={<Vendor/>} />
