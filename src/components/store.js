@@ -62,144 +62,6 @@ const Navbar = () => {
 };
 
 
-// Search and Filter Component
-const SearchAndFilter = () => {
-  const categories = [
-    {
-      name: 'Clothing',
-      subcategories: ['Shirts', 'Pants', 'Socks']
-    },
-    {
-      name: 'Electronics',
-      subcategories: ['Phones', 'Laptops', 'Accessories']
-    }
-  ];
-
-  return (
-    <div className="bg-white px-6 py-4 border-b">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-            <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
-          </div>
-          
-          <div className="flex space-x-4">
-            {categories.map((category) => (
-              <div key={category.name} className="relative group">
-                <button className="px-4 py-2 text-gray-700 hover:text-sky-600 flex items-center">
-                  {category.name}
-                  <ChevronDown size={16} className="ml-1" />
-                </button>
-                <div className="absolute hidden group-hover:block w-48 bg-white shadow-lg rounded-lg mt-1">
-                  {category.subcategories.map((sub) => (
-                    <button
-                      key={sub}
-                      className="block w-full text-left px-4 py-2 hover:bg-sky-50"
-                    >
-                      {sub}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Product Card Component
-const ProductCard = ({ product }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden group">
-      <div className="relative">
-        <img 
-          src={product.image} 
-          alt={product.name}
-          className="w-full h-64 object-cover group-hover:scale-105 transition"
-        />
-        <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:text-red-500">
-          <Heart size={20} />
-        </button>
-      </div>
-      
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-        <div className="flex items-center mt-1">
-          <div className="flex text-yellow-400">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={16} fill={i < product.rating ? "currentColor" : "none"} />
-            ))}
-          </div>
-          <span className="ml-2 text-sm text-gray-600">({product.reviews})</span>
-        </div>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-gray-900">Rs {product.price}</span>
-          <button className="px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600 transition flex items-center">
-            <ShoppingCart size={18} className="mr-2" />
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-// const ProductsGrid = () => {
-//   const [products, setProducts] = useState([]);
-
-//   // Fetch products from the API
-//   const fetchProducts = async () => {
-//     try {
-//       const response = await fetch('http://localhost:3000/api/products');
-//       const data = await response.json();
-//       setProducts(data);
-//     } catch (error) {
-//       console.error('Error fetching products:', error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchProducts();
-//   }, []);
-
-//   return (
-//     <div className="store-container mx-auto py-8 px-4">
-//       <h2 className="text-2xl font-bold mb-6 text-center">Our Products</h2>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-//         {products.map((product) => (
-//           <div
-//             key={product.id}
-//             className="product-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
-//           >
-//             <div className="aspect-w-16 aspect-h-9">
-//               {product.images?.split(',')[0] && (
-//                 <img
-//                   src={`http://localhost:3000/${product.images.split(',')[0]}`}
-//                   alt={product.name}
-//                   className="w-full h-48 object-cover"
-//                 />
-//               )}
-//             </div>
-//             <div className="p-4">
-//               <h3 className="font-semibold text-lg">{product.name}</h3>
-//               <p className="text-gray-600 mt-2">Category: {product.category}</p>
-//               <p className="text-gray-600">Price: ${product.price}</p>
-//               <p className="text-gray-600">Size: {product.size}</p>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-
 
 
 const ImageModal = ({ image, productName, onClose }) => {
@@ -314,26 +176,56 @@ const Cart = ({ items, onUpdateQuantity, onRemove, onClose, onCheckout }) => {
       </div>
     </div>
   );
-};
-
-// Checkout Modal
-const CheckoutModal = ({ total, onClose, onSubmit }) => {
+};const CheckoutModal = ({ total, onClose, cartItems }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     address: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (cartItems.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+
+    const orderData = {
+      product_id: cartItems[0].id, // Use the first product's ID in the cart
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_phone: formData.phone,
+      customer_address: formData.address,
+      total_price: total,
+      status: "Processing", // Default status
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`✅ Order Created Successfully! \nOrder ID: ${data.id}`);
+        onClose(); // Close the modal
+      } else {
+        alert(`❌ Failed to Create Order: ${data.message || 'Please try again'}`);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      alert("⚠️ Something went wrong! Please check your network and try again.");
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      
       <div className="bg-white rounded-lg max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Checkout</h2>
@@ -350,7 +242,7 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
 
@@ -361,7 +253,18 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Phone</label>
+            <input
+              type="text"
+              required
+              className="w-full border rounded px-3 py-2"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </div>
 
@@ -371,46 +274,8 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.address}
-              onChange={(e) => setFormData({...formData, address: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Card Number</label>
-            <input
-              type="text"
-              required
-              maxLength="16"
-              className="w-full border rounded px-3 py-2"
-              value={formData.cardNumber}
-              onChange={(e) => setFormData({...formData, cardNumber: e.target.value})}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Expiry</label>
-              <input
-                type="text"
-                required
-                placeholder="MM/YY"
-                maxLength="5"
-                className="w-full border rounded px-3 py-2"
-                value={formData.expiry}
-                onChange={(e) => setFormData({...formData, expiry: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">CVV</label>
-              <input
-                type="text"
-                required
-                maxLength="3"
-                className="w-full border rounded px-3 py-2"
-                value={formData.cvv}
-                onChange={(e) => setFormData({...formData, cvv: e.target.value})}
-              />
-            </div>
           </div>
 
           <div className="mt-6">
@@ -422,7 +287,7 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
             >
-              Pay Now
+              Place Order
             </button>
           </div>
         </form>
@@ -431,7 +296,6 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
   );
 };
 
-// Main ProductsGrid Component
 const ProductsGrid = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -442,14 +306,12 @@ const ProductsGrid = () => {
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [selectedProductDetails, setSelectedProductDetails] = useState(null);
-  // Define the missing states
-const [selectedProduct, setSelectedProduct] = useState(null);
-const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterPrice, setFilterPrice] = useState('');
 
-// The rest of your code follows...
-
-
-  
   const productsPerPage = 8;
 
   // Fetch products from the API
@@ -473,6 +335,7 @@ const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     fetchProducts();
   }, []);
+
   const fetchProductDetails = async (productId) => {
     try {
       const response = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -485,13 +348,21 @@ const [showModal, setShowModal] = useState(false);
       console.error(error.message);
     }
   };
-  
+
+  // Filter products based on search query and filters
+  const filteredProducts = products.filter(product => {
+    return (
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (filterCategory ? product.category === filterCategory : true) &&
+      (filterPrice ? product.price <= parseFloat(filterPrice) : true)
+    );
+  });
 
   // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   // Cart functions
   const addToCart = (product) => {
@@ -521,16 +392,6 @@ const [showModal, setShowModal] = useState(false);
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleCheckout = (formData) => {
-    // Here you would typically make an API call to process the payment
-    console.log('Processing payment:', formData);
-    // Clear cart and close modals after successful payment
-    setCartItems([]);
-    setShowCheckout(false);
-    setShowCart(false);
-    // You might want to show a success message here
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -554,158 +415,171 @@ const [showModal, setShowModal] = useState(false);
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="store-container mx-auto py-8 px-4 relative">
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-2xl font-bold">Our Products</h2>
-      <button
-        onClick={() => setShowCart(true)}
-        className="relative p-2 text-gray-600 hover:text-gray-800"
-      >
-        <ShoppingCart size={24} />
-        {cartItems.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-            {cartItems.length}
-          </span>
-        )}
-      </button>
-    </div>
-  
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {currentProducts.map((product) => (
-        <div
-          key={product.id}
-          className="product-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
-        >
-          <div
-            className="aspect-w-16 aspect-h-9 cursor-pointer relative"
-            onClick={() => {
-              fetchProductDetails(product.id);
-              setSelectedImage({ url: product.images.split(',')[0], name: product.name });
-            }}
-          >
-            {product.images?.split(',')[0] && (
-              <img
-                src={`http://localhost:3000/${product.images.split(',')[0]}`}
-                alt={product.name}
-                className="w-full h-48 object-cover"
-              />
-            )}
-            <button
-              onClick={() => {
-                setSelectedProduct(product);
-                setShowModal(true);
-              }}
-              className="absolute bottom-2 right-2 p-2 bg-white rounded-full shadow-md"
-            >
-              <Heart className="w-5 h-5" />
-            </button>
-          </div>
-  
-          <div className="p-4">
-            <h3 className="font-semibold text-lg">{product.name}</h3>
-            <p className="text-gray-600 mt-2">Category: {product.category}</p>
-            <p className="text-gray-600">Price: ₹{product.price}</p>
-            <p className="text-gray-600">Size: {product.size}</p>
-            <div className="flex items-center mt-2">
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4"
-                    fill={i < product.rating ? "currentColor" : "none"}
-                  />
-                ))}
-              </div>
-              <span className="ml-2 text-sm text-gray-600">({product.reviews})</span>
-            </div>
-            <button
-              onClick={() => addToCart(product)}
-              className="mt-4 w-full bg-sky-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  
-    {/* Pagination */}
-    <div className="flex justify-center mt-8 gap-2">
-      <button
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Previous
-      </button>
-      {[...Array(totalPages)].map((_, i) => (
+     
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Our Products</h2>
         <button
-          key={i + 1}
-          onClick={() => setCurrentPage(i + 1)}
-          className={`px-4 py-2 border rounded ${
-            currentPage === i + 1 ? 'bg-sky-500 text-white' : ''
-          }`}
+          onClick={() => setShowCart(true)}
+          className="relative p-2 text-gray-600 hover:text-gray-800"
         >
-          {i + 1}
+          <ShoppingCart size={24} />
+          {cartItems.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+              {cartItems.length}
+            </span>
+          )}
         </button>
-      ))}
-      <button
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Next
-      </button>
-    </div>
-  
-    {/* Modal Rendering */}
-    {selectedImage && (
-      <ImageModal
-        image={selectedImage.url}
-        productName={selectedImage.name}
-        productDetails={selectedProductDetails}
-        onClose={() => {
-          setSelectedImage(null);
-          setSelectedProductDetails(null);
-        }}
-      />
-    )}
-  
-    {showCart && (
-      <Cart
-        items={cartItems}
-        onUpdateQuantity={updateCartItemQuantity}
-        onRemove={removeFromCart}
-        onClose={() => setShowCart(false)}
-        onCheckout={() => {
-          setShowCart(false);
-          setShowCheckout(true);
-        }}
-      />
-    )}
-  
-    {showCheckout && (
-      <CheckoutModal
-        total={cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}
-        onClose={() => setShowCheckout(false)}
-        onSubmit={handleCheckout}
-      />
-    )}
-  </div>
-    );
-};
+      </div>
 
-// };
-// Main App Component
-const EcommerceStore = () => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <SearchAndFilter />
-      <ProductsGrid />
-      <Footer/>
+      {/* Search and Filter UI */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 border rounded mb-4"
+        />
+        <div className="flex gap-4">
+          
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={filterPrice}
+            onChange={(e) => setFilterPrice(e.target.value)}
+            className="p-2 border rounded"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {currentProducts.map((product) => (
+          <div
+            key={product.id}
+            className="product-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
+          >
+            <div
+              className="aspect-w-16 aspect-h-9 cursor-pointer relative"
+              onClick={() => {
+                fetchProductDetails(product.id);
+                setSelectedImage({ url: product.images.split(',')[0], name: product.name });
+              }}
+            >
+              {product.images?.split(',')[0] && (
+                <img
+                  src={`http://localhost:3000/${product.images.split(',')[0]}`}
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <button
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowModal(true);
+                }}
+                className="absolute bottom-2 right-2 p-2 bg-white rounded-full shadow-md"
+              >
+                <Heart className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-4">
+              <h3 className="font-semibold text-lg">{product.name}</h3>
+              <p className="text-gray-600 mt-2">Category: {product.category}</p>
+              <p className="text-gray-600">Price: ₹{product.price}</p>
+              <p className="text-gray-600">Size: {product.size}</p>
+              <div className="flex items-center mt-2">
+                <div className="flex text-yellow-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4"
+                      fill={i < product.rating ? "currentColor" : "none"}
+                    />
+                  ))}
+                </div>
+                <span className="ml-2 text-sm text-gray-600">({product.reviews})</span>
+              </div>
+              <button
+                onClick={() => addToCart(product)}
+                className="mt-4 w-full bg-sky-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-8 gap-2">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => setCurrentPage(i + 1)}
+            className={`px-4 py-2 border rounded ${
+              currentPage === i + 1 ? 'bg-sky-500 text-white' : ''
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Modal Rendering */}
+      {selectedImage && (
+        <ImageModal
+          image={selectedImage.url}
+          productName={selectedImage.name}
+          productDetails={selectedProductDetails}
+          onClose={() => {
+            setSelectedImage(null);
+            setSelectedProductDetails(null);
+          }}
+        />
+      )}
+
+      {showCart && (
+        <Cart
+          items={cartItems}
+          onUpdateQuantity={updateCartItemQuantity}
+          onRemove={removeFromCart}
+          onClose={() => setShowCart(false)}
+          onCheckout={() => {
+            setShowCart(false);
+            setShowCheckout(true);
+          }}
+        />
+      )}
+
+      {showCheckout && (
+        <CheckoutModal
+          total={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+          onClose={() => setShowCheckout(false)}
+          cartItems={cartItems} // Pass cartItems to the modal
+        />
+      )}
     </div>
+    <Footer/>
+    </>
   );
 };
 
-export default EcommerceStore;
+export default ProductsGrid;

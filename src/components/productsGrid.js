@@ -114,22 +114,51 @@ const Cart = ({ items, onUpdateQuantity, onRemove, onClose, onCheckout }) => {
       </div>
     </div>
   );
-};
-
-// Checkout Modal
-const CheckoutModal = ({ total, onClose, onSubmit }) => {
+};const CheckoutModal = ({ total, onClose, cartItems }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     address: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (cartItems.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+
+    const orderData = {
+      product_id: cartItems[0].id, // Use the first product's ID in the cart
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_phone: formData.phone,
+      customer_address: formData.address,
+      total_price: total,
+      status: "Processing", // Default status
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`✅ Order Created Successfully! \nOrder ID: ${data.id}`);
+        onClose(); // Close the modal
+      } else {
+        alert(`❌ Failed to Create Order: ${data.message || 'Please try again'}`);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      alert("⚠️ Something went wrong! Please check your network and try again.");
+    }
   };
 
   return (
@@ -150,7 +179,7 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
 
@@ -161,7 +190,18 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Phone</label>
+            <input
+              type="text"
+              required
+              className="w-full border rounded px-3 py-2"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </div>
 
@@ -171,46 +211,8 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               required
               className="w-full border rounded px-3 py-2"
               value={formData.address}
-              onChange={(e) => setFormData({...formData, address: e.target.value})}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Card Number</label>
-            <input
-              type="text"
-              required
-              maxLength="16"
-              className="w-full border rounded px-3 py-2"
-              value={formData.cardNumber}
-              onChange={(e) => setFormData({...formData, cardNumber: e.target.value})}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Expiry</label>
-              <input
-                type="text"
-                required
-                placeholder="MM/YY"
-                maxLength="5"
-                className="w-full border rounded px-3 py-2"
-                value={formData.expiry}
-                onChange={(e) => setFormData({...formData, expiry: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">CVV</label>
-              <input
-                type="text"
-                required
-                maxLength="3"
-                className="w-full border rounded px-3 py-2"
-                value={formData.cvv}
-                onChange={(e) => setFormData({...formData, cvv: e.target.value})}
-              />
-            </div>
           </div>
 
           <div className="mt-6">
@@ -222,7 +224,7 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
             >
-              Pay Now
+              Place Order
             </button>
           </div>
         </form>
@@ -231,131 +233,126 @@ const CheckoutModal = ({ total, onClose, onSubmit }) => {
   );
 };
 
-
-// Main ProductsGrid Component
 const ProductsGrid = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [cartItems, setCartItems] = useState([]);
-    const [showCart, setShowCart] = useState(false);
-    const [showCheckout, setShowCheckout] = useState(false);
-    const [selectedProductDetails, setSelectedProductDetails] = useState(null);
-    // Define the missing states
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [selectedProductDetails, setSelectedProductDetails] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  
-  // The rest of your code follows...
-  
-  
-    
-    const productsPerPage = 8;
-  
-    // Fetch products from the API
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetch('http://localhost:3000/api/products');
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterPrice, setFilterPrice] = useState('');
+
+  const productsPerPage = 8;
+
+  // Fetch products from the API
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('http://localhost:3000/api/products');
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
       }
-    };
-  
-    useEffect(() => {
-      fetchProducts();
-    }, []);
-    const fetchProductDetails = async (productId) => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch product details');
-        }
-        const data = await response.json();
-        setSelectedProductDetails(data);
-      } catch (error) {
-        console.error(error.message);
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProductDetails = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch product details');
       }
-    };
-    
-  
-    // Pagination logic
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-    const totalPages = Math.ceil(products.length / productsPerPage);
-  
-    // Cart functions
-    const addToCart = (product) => {
-      setCartItems(prev => {
-        const existing = prev.find(item => item.id === product.id);
-        if (existing) {
-          return prev.map(item =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          );
-        }
-        return [...prev, { ...product, quantity: 1 }];
-      });
-    };
-  
-    const updateCartItemQuantity = (id, quantity) => {
-      if (quantity < 1) return;
-      setCartItems(prev =>
-        prev.map(item =>
-          item.id === id ? { ...item, quantity } : item
-        )
-      );
-    };
-  
-    const removeFromCart = (id) => {
-      setCartItems(prev => prev.filter(item => item.id !== id));
-    };
-  
-    const handleCheckout = (formData) => {
-      // Here you would typically make an API call to process the payment
-      console.log('Processing payment:', formData);
-      // Clear cart and close modals after successful payment
-      setCartItems([]);
-      setShowCheckout(false);
-      setShowCart(false);
-      // You might want to show a success message here
-    };
-  
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      );
+      const data = await response.json();
+      setSelectedProductDetails(data);
+    } catch (error) {
+      console.error(error.message);
     }
-  
-    if (error) {
-      return (
-        <div className="text-center py-12">
-          <p className="text-red-500 mb-4">{error}</p>
-          <button
-            onClick={fetchProducts}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Try Again
-          </button>
-        </div>
-      );
-    }
-  
+  };
+
+  // Filter products based on search query and filters
+  const filteredProducts = products.filter(product => {
     return (
-      <div className="store-container mx-auto py-8 px-4 relative">
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (filterCategory ? product.category === filterCategory : true) &&
+      (filterPrice ? product.price <= parseFloat(filterPrice) : true)
+    );
+  });
+
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  // Cart functions
+  const addToCart = (product) => {
+    setCartItems(prev => {
+      const existing = prev.find(item => item.id === product.id);
+      if (existing) {
+        return prev.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const updateCartItemQuantity = (id, quantity) => {
+    if (quantity < 1) return;
+    setCartItems(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const removeFromCart = (id) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={fetchProducts}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="store-container mx-auto py-8 px-4 relative">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Our Products</h2>
         <button
@@ -370,7 +367,28 @@ const ProductsGrid = () => {
           )}
         </button>
       </div>
-    
+
+      {/* Search and Filter UI */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 border rounded mb-4"
+        />
+        <div className="flex gap-4">
+          
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={filterPrice}
+            onChange={(e) => setFilterPrice(e.target.value)}
+            className="p-2 border rounded"
+          />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {currentProducts.map((product) => (
           <div
@@ -401,7 +419,7 @@ const ProductsGrid = () => {
                 <Heart className="w-5 h-5" />
               </button>
             </div>
-    
+
             <div className="p-4">
               <h3 className="font-semibold text-lg">{product.name}</h3>
               <p className="text-gray-600 mt-2">Category: {product.category}</p>
@@ -429,7 +447,7 @@ const ProductsGrid = () => {
           </div>
         ))}
       </div>
-    
+
       {/* Pagination */}
       <div className="flex justify-center mt-8 gap-2">
         <button
@@ -458,7 +476,7 @@ const ProductsGrid = () => {
           Next
         </button>
       </div>
-    
+
       {/* Modal Rendering */}
       {selectedImage && (
         <ImageModal
@@ -471,7 +489,7 @@ const ProductsGrid = () => {
           }}
         />
       )}
-    
+
       {showCart && (
         <Cart
           items={cartItems}
@@ -484,17 +502,16 @@ const ProductsGrid = () => {
           }}
         />
       )}
-    
+
       {showCheckout && (
         <CheckoutModal
-          total={cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}
+          total={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
           onClose={() => setShowCheckout(false)}
-          onSubmit={handleCheckout}
+          cartItems={cartItems} // Pass cartItems to the modal
         />
       )}
     </div>
-      );
-  };
-  
+  );
+};
 
-  export default ProductsGrid;
+export default ProductsGrid;
